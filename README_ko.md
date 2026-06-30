@@ -50,12 +50,25 @@
 
 ## 📰 뉴스
 
-- **2026-06-19** 🚀 **v0.1.10 — 글로벌 데이터 계층**: 시장 데이터 소스가 10 → 18개로 확대(무료 **Eastmoney / Sina / Stooq / Yahoo** + 키 기반 **Finnhub / Alpha Vantage / Tiingo / FMP**, IP 차단 위험 순 fallback). 여기에 **읽기 전용 데이터 도구 18종**(자금 흐름, 용호방, 북향, 신용거래, 대종거래, SEC EDGAR + XBRL, 재무, 옵션 체인, 전체 시장 스크리닝…)을 A주 / 미국 / 홍콩 전반에 걸쳐 모두 MCP로 노출. 이번 릴리스는 0.1.9 이후의 모든 업데이트도 함께 포함합니다 — 브로커 커넥터 10종, `alpha compare`, 프로바이더 신뢰성 대개편, 옵션형 데이터 캐시. `pip install -U vibe-trading-ai`
-- **2026-06-18** 🔬 **Research Autopilot 1단계 + 로컬 Data Bridge 로더, 그리고 Discord 보안 공지**: 새 `run_research_autopilot` + `generate_backtest_config`가 **Hypothesis → Research Goal → backtest**를 끝까지 연결하고(이제 **50개 도구**), 새 **`local`** 로더가 사용자 본인의 **CSV / Parquet / DuckDB** 파일에서 직접 OHLCV를 읽습니다([#260](https://github.com/HKUDS/Vibe-Trading/pull/260), [#252](https://github.com/HKUDS/Vibe-Trading/pull/252), @Robin1987China 님 감사합니다). 또한 DeepSeek `DSML` tool call 파싱과 식별자 봉쇄 강화가 들어왔습니다. ⚠️ **보안 공지**: 이전 커뮤니티 Discord 초대는 이제 우리가 관리하지 않는 서버(가짜 Collab.Land 지갑 "인증" 피싱)로 연결됩니다 — 모두 제거됐고, **유일한** 공식 Discord는 HKUDS 서버([discord.gg/6TdQnT5xcF](https://discord.gg/6TdQnT5xcF))입니다. 지갑 연결을 요구하는 일은 결코 없습니다.
-- **2026-06-17** 🧩 **설치 호환성 + Opus/Kimi 프로바이더 수정**: 기본 `pip install vibe-trading-ai`는 더 이상 선택 기능인 `pyharmonics` / `ta` 의존성 체인을 끌어오지 않습니다. harmonic detection은 `vibe-trading-ai[harmonic]` extra 뒤로 이동했고, 내장 fallback detector는 그대로 사용할 수 있습니다([#250](https://github.com/HKUDS/Vibe-Trading/pull/250), [#249](https://github.com/HKUDS/Vibe-Trading/issues/249) 종료). Agent loop는 Opus 4.8+가 거부하는 assistant-prefill handoff message를 보내지 않으며, Kimi/Moonshot은 `MOONSHOT_USER_AGENT`로 client `User-Agent`를 덮어쓸 수 있습니다([#248](https://github.com/HKUDS/Vibe-Trading/pull/248), [#246](https://github.com/HKUDS/Vibe-Trading/issues/246) 및 [#204](https://github.com/HKUDS/Vibe-Trading/issues/204) 종료). 후속 테스트는 background-result와 auto-compact handoff 경로를 직접 커버합니다([#251](https://github.com/HKUDS/Vibe-Trading/pull/251)).
+- **2026-06-30** 💬 **리서치 전달을 위한 IM 채널 런타임**: Vibe-Trading은 이제 같은 agent session runtime을 16개 내장 메시지 어댑터에 연결할 수 있습니다 — WebSocket, Telegram, Slack, Discord, Matrix, WhatsApp, Signal, QQ/NapCat, WeChat/WeCom, Feishu/Lark, DingTalk, Teams, email, Mochat. CLI(`vibe-trading channels status/start/stop/login/pairing`), REST(`/channels/status`, `/channels/start`, `/channels/stop`, `/channels/pairing/command`), Web UI Settings 패널이 상태, 복구 힌트, 시작/중지, sender pairing을 제공하며, SDK 기반 어댑터는 `vibe-trading-ai[telegram]` 또는 `vibe-trading-ai[channels]` 같은 extras 뒤에 둡니다([#341](https://github.com/HKUDS/Vibe-Trading/pull/341)).
+
+- **2026-06-29** 🛡️ **Live advisory safety + Trading 212 read-only connector + Windows/Gemini fixes**: live order guards now have an opt-in, broker-agnostic `PreTradeAdvisoryInterface` that records advisory reviews without bypassing the mandate gate, kill switch, or audit trail ([#328](https://github.com/HKUDS/Vibe-Trading/pull/328), closes [#317](https://github.com/HKUDS/Vibe-Trading/issues/317), thanks @shadowinlife). Trading 212 joins the connector layer with read-only account, positions, orders, history, and instrument-metadata support; `place_order` / `cancel_order` still hard-refuse until a structural paper/live boundary exists ([#321](https://github.com/HKUDS/Vibe-Trading/pull/321), closes [#309](https://github.com/HKUDS/Vibe-Trading/issues/309), thanks @mvanhorn). Windows startup avoids the pandas 3.0 `Timestamp` crash via the `<3.0.0` constraint ([#329](https://github.com/HKUDS/Vibe-Trading/pull/329), closes [#324](https://github.com/HKUDS/Vibe-Trading/issues/324), thanks @hannibal-lee); Gemini `thought_signature` dict-history replay was verified/fixed on `main` ([#318](https://github.com/HKUDS/Vibe-Trading/issues/318)); `.US` financial statements now route to SEC EDGAR instead of Eastmoney ([#325](https://github.com/HKUDS/Vibe-Trading/issues/325)); and the Alpha Library landing page got cache/date/selector/noscript/DNS-prefetch hardening while heavier CSP and social-card follow-ups stay tracked ([#323](https://github.com/HKUDS/Vibe-Trading/issues/323)).
+
+- **2026-06-28** 🧰 **크로스 플랫폼 setup/dev + 런타임 및 파일 도구 강화**: `vibe-trading setup` 과 `vibe-trading dev` 가 Windows TypeScript build, 올바른 cwd 에서의 backend 실행, Vite 5899 포트, 종료 시 child process 정리를 제대로 처리합니다([#292](https://github.com/HKUDS/Vibe-Trading/pull/292), @digger-yu 님 감사합니다). Runtime status polling 은 이제 crash 대신 graceful 하게 degrade 하고([#322](https://github.com/HKUDS/Vibe-Trading/issues/322)), MCP OAuth cache key 는 sanitize 되며([#313](https://github.com/HKUDS/Vibe-Trading/issues/313)), OpenAI default 와 Robinhood `agent.json` validation 도 더 엄격해졌습니다([#319](https://github.com/HKUDS/Vibe-Trading/pull/319), [#320](https://github.com/HKUDS/Vibe-Trading/pull/320), @mvanhorn 님 감사합니다). File tools 는 독립 read/write roots 와 확장된 sandbox tests 를 갖췄습니다([#299](https://github.com/HKUDS/Vibe-Trading/pull/299), @skloxo 님 감사합니다).
 <details>
 <summary>이전 뉴스</summary>
 
+- **2026-06-27** 🧯 **콘텐츠 필터 복원력 + Shadow Account feature contract 정리**: event-driven / swarm 실행은 이제 개별 LLM content-moderation hit 를 건너뛰고, filter rate 가 높으면 run card 에 경고하며, Gemini safety finish reason 을 인식해 전체 analysis 를 abort 하지 않습니다([#308](https://github.com/HKUDS/Vibe-Trading/pull/308), [#307](https://github.com/HKUDS/Vibe-Trading/issues/307) 종료, @shadowinlife 님 감사합니다). Shadow Account extraction/codegen 은 하나의 `PRICE_FEATURES` contract 를 공유하고 네 자리 소수 return bounds 를 유지해 rule/codegen drift 와 `prior_5d_return` 정밀도 손실을 막습니다([#316](https://github.com/HKUDS/Vibe-Trading/pull/316), @Robin1987China 님 감사합니다).
+- **2026-06-26** 🎯 **Shadow Account 조건부 진입 + tushare ETF/지수/HK 라우팅**: 추출된 Shadow Account 규칙이 이제 RSI / prior-return 범위를 담아, 생성된 SignalEngine 이 보유 주기를 맹목적으로 반복하지 않고 실제 조건(RSI 가 범위 내, prior-return 이 범위 내)에서 진입합니다([#314](https://github.com/HKUDS/Vibe-Trading/pull/314), [#302](https://github.com/HKUDS/Vibe-Trading/pull/302) follow-up, @Robin1987China 님 감사합니다). tushare loader 도 ETF/LOF 를 `fund_daily()`, 지수를 `index_daily()`, 홍콩 주식을 `hk_daily()` 로 라우팅하며, 비주식에 대해 조용히 빈 값을 반환하는 `daily()` 를 항상 호출하던 동작을 멈추고, 심볼별 빈 결과 + 부분 수집 경고를 추가했습니다([#315](https://github.com/HKUDS/Vibe-Trading/pull/315), [#310](https://github.com/HKUDS/Vibe-Trading/issues/310) 종료, @shadowinlife 님 감사합니다).
+- **2026-06-25** 🧪 **엄격한 validation JSON + 더 안정적인 agent context**: 독립 backtest validation 이 `artifacts/validation.json` 또는 CLI stdout 을 쓰기 전에 중첩된 `NaN` / `Infinity` 값을 정규화해, strict JSON parser 가 validation payload 에서 막히지 않습니다([#306](https://github.com/HKUDS/Vibe-Trading/pull/306), @gyx09212214-prog 님 감사합니다). Agent prompt 도 loader registry 에서 현재 data-source 수를 동적으로 계산하고, `_microcompact()` 는 실제 token pressure 가 있을 때만 실행되어 짧은 실행에서 오래된 tool result 를 너무 일찍 비우지 않습니다([#296](https://github.com/HKUDS/Vibe-Trading/pull/296), [#282](https://github.com/HKUDS/Vibe-Trading/issues/282) 종료, @MarkfuGod 님 감사합니다).
+- **2026-06-24** 🎯 **Shadow Account 가격 context + 반응형 중국어 UI + LAN auth 수정**: Shadow Account 규칙 추출은 이제 `buy_dt` 기준 point-in-time-safe entry context 인 `entry_rsi14` 와 `prior_5d_return` 을 loader registry 로 가져오며, offline / no-data 상황에서는 기존처럼 graceful 하게 feature 를 제외합니다([#302](https://github.com/HKUDS/Vibe-Trading/pull/302), [#295](https://github.com/HKUDS/Vibe-Trading/issues/295) follow-up, @Robin1987China 님 감사합니다). 주요 Web UI 패널은 charts, chat, Alpha Library, Correlation, Run Detail 까지 반응형 English / zh-CN translation 을 사용합니다([#301](https://github.com/HKUDS/Vibe-Trading/pull/301), @skloxo 님 감사합니다). CSRF hardening 이후에도 `API_AUTH_KEY` 가 설정된 remote same-origin Web UI deployment 는 POST / upload 가 다시 통과하고, mismatch 된 cross-site origin 은 계속 차단됩니다([#304](https://github.com/HKUDS/Vibe-Trading/pull/304), @Hinotoi-agent 님 감사합니다).
+- **2026-06-23** 🛡️ **로컬 API CSRF 강화**: 악성 웹 페이지가 루프백 API에 안전하지 않은 크로스 사이트 요청(POST/PUT/DELETE)을 보낼 수 없게 했습니다 — CORS는 응답 읽기는 막아도 부작용은 막지 못하므로, 루프백 dev-mode 신뢰를 허용하기 **전에** 안전하지 않은 메서드에 기존 크로스 사이트 가드를 적용합니다. 안전한 메서드와 로컬 CLI / 비브라우저 업로드에는 영향이 없습니다([#293](https://github.com/HKUDS/Vibe-Trading/pull/293), @Hinotoi-agent 님 감사합니다).
+- **2026-06-22** 🔧 **라이브 인가 OAuth 수정 + Alpha Zoo 헤드라인 수정**: `connector authorize`가 몇 분이 걸리는 브로커 로그인 동안 OAuth 핸드셰이크를 유지하고(`VIBE_LIVE_AUTHORIZE_TIMEOUT_SECONDS`로 조정 가능), 재시도 시 경쟁하는 콜백 서버를 더 이상 띄우지 않아 토큰이 실제로 저장됩니다([#281](https://github.com/HKUDS/Vibe-Trading/pull/281), [#259](https://github.com/HKUDS/Vibe-Trading/issues/259) 종료, @Robin1987China 님 감사합니다). Alpha Zoo 페이지가 alpha 개수를 두 번 표시하지 않습니다([#287](https://github.com/HKUDS/Vibe-Trading/pull/287), [#286](https://github.com/HKUDS/Vibe-Trading/issues/286) 종료, @digger-yu 님 감사합니다). 예약 리서치에도 엔드투엔드 사용 문서가 추가됐습니다([#288](https://github.com/HKUDS/Vibe-Trading/pull/288)).
+- **2026-06-21** ⏰ **예약 리서치 실행기 + 리포트 라이브러리 + 백테스트 사후 기여도 분석**: 예약 리서치가 이제 **엔드투엔드**로 동작합니다 — 기본 비활성화된 백그라운드 실행기(`VIBE_TRADING_ENABLE_SCHEDULER`)가 interval/cron 으로 도래한 작업을 세션 런타임을 통해 실행합니다([#278](https://github.com/HKUDS/Vibe-Trading/pull/278), @mvanhorn 님 감사합니다, [#254](https://github.com/HKUDS/Vibe-Trading/issues/254) 종료). 새 **`/reports` 실행 라이브러리** 페이지는 리포트를 생성한 실행을 나열·검색·필터링하고 Run Detail + Compare 로 연결됩니다([#224](https://github.com/HKUDS/Vibe-Trading/pull/224), @LemonCANDY42 님 감사합니다). 또한 백테스트가 끝날 때마다 에이전트가 **계층형 기여도 분석** — 거래 단위 손익 Top, 베타 회귀, 시장 레짐 분석, 몬테카를로 순열 검정 — 을 데이터 가용성과 라우팅 조건에 따라 자동으로 수행합니다([#280](https://github.com/HKUDS/Vibe-Trading/pull/280), @shadowinlife 님 감사합니다).
+- **2026-06-20** 🔬 **Research Autopilot 루프 완성(3단계) + 로더 OHLC 무결성 가드 + 학술 알파 4종**: **Research Autopilot** 이 **가설 → 시그널 엔진 → 백테스트** 를 엔드투엔드로 실행합니다 — `scaffold_signal_engine` 이 runner 계약에 맞는 엔진을 생성하고, `link_autopilot_backtest` 가 백테스트 지표를 가설로 자동 회신합니다(**68개 도구**)([#267](https://github.com/HKUDS/Vibe-Trading/pull/267)). 구조적 **OHLC 정합성 검사**가 로더 경계에서 잘못된 bar(`high < low`, 음수 가격, high/low가 open/close를 감싸지 못함)를 일괄 제거해 모든 데이터 소스를 보호합니다([#274](https://github.com/HKUDS/Vibe-Trading/pull/274), @Shizoqua 님 감사합니다). 그리고 **academic 알파 패밀리가 6 → 10으로 확장**됩니다 — Jegadeesh 반전, George-Hwang 52주 고점, Amihud 비유동성, Harvey-Siddique 왜도(**456개 팩터**)([#277](https://github.com/HKUDS/Vibe-Trading/pull/277), @Robin1987China 님 감사합니다).
+- **2026-06-19** 🚀 **v0.1.10 — 글로벌 데이터 계층**: 시장 데이터 소스가 10 → 18개로 확대(무료 **Eastmoney / Sina / Stooq / Yahoo** + 키 기반 **Finnhub / Alpha Vantage / Tiingo / FMP**, IP 차단 위험 순 fallback). 여기에 **읽기 전용 데이터 도구 18종**(자금 흐름, 용호방, 북향, 신용거래, 대종거래, SEC EDGAR + XBRL, 재무, 옵션 체인, 전체 시장 스크리닝…)을 A주 / 미국 / 홍콩 전반에 걸쳐 모두 MCP로 노출. 이번 릴리스는 0.1.9 이후의 모든 업데이트도 함께 포함합니다 — 브로커 커넥터 10종, `alpha compare`, 프로바이더 신뢰성 대개편, 옵션형 데이터 캐시. `pip install -U vibe-trading-ai`
+- **2026-06-18** 🔬 **Research Autopilot 1단계 + 로컬 Data Bridge 로더, 그리고 Discord 보안 공지**: 새 `run_research_autopilot` + `generate_backtest_config`가 **Hypothesis → Research Goal → backtest**를 끝까지 연결하고(이제 **50개 도구**), 새 **`local`** 로더가 사용자 본인의 **CSV / Parquet / DuckDB** 파일에서 직접 OHLCV를 읽습니다([#260](https://github.com/HKUDS/Vibe-Trading/pull/260), [#252](https://github.com/HKUDS/Vibe-Trading/pull/252), @Robin1987China 님 감사합니다). 또한 DeepSeek `DSML` tool call 파싱과 식별자 봉쇄 강화가 들어왔습니다. ⚠️ **보안 공지**: 이전 커뮤니티 Discord 초대는 이제 우리가 관리하지 않는 서버(가짜 Collab.Land 지갑 "인증" 피싱)로 연결됩니다 — 모두 제거됐고, **유일한** 공식 Discord는 HKUDS 서버([discord.gg/6TdQnT5xcF](https://discord.gg/6TdQnT5xcF))입니다. 지갑 연결을 요구하는 일은 결코 없습니다.
+- **2026-06-17** 🧩 **설치 호환성 + Opus/Kimi 프로바이더 수정**: 기본 `pip install vibe-trading-ai`는 더 이상 선택 기능인 `pyharmonics` / `ta` 의존성 체인을 끌어오지 않습니다. harmonic detection은 `vibe-trading-ai[harmonic]` extra 뒤로 이동했고, 내장 fallback detector는 그대로 사용할 수 있습니다([#250](https://github.com/HKUDS/Vibe-Trading/pull/250), [#249](https://github.com/HKUDS/Vibe-Trading/issues/249) 종료). Agent loop는 Opus 4.8+가 거부하는 assistant-prefill handoff message를 보내지 않으며, Kimi/Moonshot은 `MOONSHOT_USER_AGENT`로 client `User-Agent`를 덮어쓸 수 있습니다([#248](https://github.com/HKUDS/Vibe-Trading/pull/248), [#246](https://github.com/HKUDS/Vibe-Trading/issues/246) 및 [#204](https://github.com/HKUDS/Vibe-Trading/issues/204) 종료). 후속 테스트는 background-result와 auto-compact handoff 경로를 직접 커버합니다([#251](https://github.com/HKUDS/Vibe-Trading/pull/251)).
 - **2026-06-16** 🛡️ **보안/API 강화 + GLM/Zhipu alias**: Settings 쓰기는 인증 설정 시 auth가 필요합니다([#245](https://github.com/HKUDS/Vibe-Trading/pull/245)); API session의 shell-capable tools는 명시적인 `VIBE_TRADING_ENABLE_SHELL_TOOLS=1` opt-in이 필요합니다([#243](https://github.com/HKUDS/Vibe-Trading/pull/243)); API key가 설정된 local shutdown도 auth가 필요합니다([#241](https://github.com/HKUDS/Vibe-Trading/pull/241)); loopback처럼 보이지만 신뢰할 수 없는 Host는 local로 취급하지 않고 거부합니다([#242](https://github.com/HKUDS/Vibe-Trading/pull/242)). 런타임 세부도 다듬었습니다: Web chat은 완료된 attempts와 동기화되고([#236](https://github.com/HKUDS/Vibe-Trading/pull/236)), run card는 유한하지 않은 metric을 strict JSON으로 출력하며([#238](https://github.com/HKUDS/Vibe-Trading/pull/238)), 잘못된 `RSSHUB_TIMEOUT_S` / `RSSHUB_FETCH_BUDGET_S`는 안전하게 fallback합니다([#240](https://github.com/HKUDS/Vibe-Trading/pull/240)). ddgs retry fallback도 regression coverage가 추가됐습니다([#239](https://github.com/HKUDS/Vibe-Trading/pull/239)). GLM/Zhipu는 first-class provider alias가 되었고 model-name inference도 추가됐습니다([#247](https://github.com/HKUDS/Vibe-Trading/pull/247), [#237](https://github.com/HKUDS/Vibe-Trading/issues/237) 종료).
 
 - **2026-06-15** 🧭 **웹 검색 견고성 + Web UI 실행 연속성 수정**: `web_search`는 단일 엔진이 레이트리밋되어도 더 이상 실패하지 않습니다——이제 여러 무료·키 불필요 엔진(DuckDuckGo, Google, Bing, Brave, Mojeek, Yahoo)을 순서대로 조회하고 재시도/백오프를 적용하며, "결과 없음"을 오류가 아닌 빈 답변으로 처리하고, 모든 엔진이 제한될 때는 무미건조한 ❌ 대신 실행 가능한 메시지를 반환합니다(엔진 목록은 `VIBE_TRADING_SEARCH_BACKENDS`로 재정의 가능)([#232](https://github.com/HKUDS/Vibe-Trading/pull/232), [#231](https://github.com/HKUDS/Vibe-Trading/issues/231) 종료, @Ethan-sun01 님 감사합니다). Web UI에서는 실행 중 페이지를 전환해도 더 이상 멈추지 않습니다——채팅이 돌아올 때 라이브 스트림에 다시 구독하고 놓친 진행을 재생합니다([#234](https://github.com/HKUDS/Vibe-Trading/pull/234))——그리고 중지 버튼이 이터레이션 경계뿐 아니라 스트리밍 중과 도구 사이에서도 즉시 적용됩니다([#235](https://github.com/HKUDS/Vibe-Trading/pull/235)). 이로써 [#229](https://github.com/HKUDS/Vibe-Trading/issues/229)의 두 증상이 모두 해결됩니다(@kalkinj 님 감사합니다). baostock loader도 tushare 스타일 `601398.SH`와 함께 네이티브 `sh.601398` / `sz.000001` 코드를 받아들입니다([#230](https://github.com/HKUDS/Vibe-Trading/pull/230), @bhlt 님 감사합니다).
@@ -195,8 +208,9 @@ Vibe-Trading은 금융 질문을 실행 가능한 분석으로 바꾸는 오픈�
 | **내 거래 검토하기** | 브로커 일지 파싱, 행동 진단, 규칙 추출, Shadow Account 비교. |
 | **반복 리서치 개선하기** | 영구 메모리와 편집 가능한 스킬로 유용한 루틴을 재사용 가능한 워크플로로 전환. |
 | **애널리스트 팀 실행하기** | 투자, 퀀트, 크립토, 매크로, 리스크 워크플로를 위한 멀티 에이전트 리서치 리뷰. |
+| **리서치를 IM 채널에 연결하기** | WebSocket, Telegram, Slack, Discord, Matrix, WhatsApp, Signal, QQ/NapCat, WeChat/WeCom, Feishu/Lark, DingTalk, Teams, email, Mochat에서 같은 session runtime을 CLI, REST, Web UI로 관리. |
 | **사용 가능한 artifacts 만들기** | 리포트, TradingView Pine Script, TDX, MetaTrader 5, MCP tools, 이후 리서치 세션. |
-| **사전 빌드된 alpha zoo 벤치** | 452개의 alpha 인자(Qlib 158 + Kakushadze 101 + GTJA 191 + FF5 + Carhart)에 대해 한 줄 CLI로 IC + IR + alive/reversed/dead 분류 수행 |
+| **사전 빌드된 alpha zoo 벤치** | 456개의 alpha 인자(Qlib 158 + Kakushadze 101 + GTJA 191 + FF5 + Carhart)에 대해 한 줄 CLI로 IC + IR + alive/reversed/dead 분류 수행 |
 
 ---
 
@@ -287,9 +301,9 @@ OHLCV를 넘어 **18개 읽기 전용 데이터 도구**가 펀더멘털과 자�
 메인 README를 읽기 쉽게 유지하기 위해 상세 목록은 아래에 접어 두었습니다. 사용 가능한 구성 요소를 확인하고 싶을 때 열어보세요.
 
 <details>
-<summary><b>금융 스킬 라이브러리</b> <sub>8개 카테고리 77개 스킬</sub></summary>
+<summary><b>금융 스킬 라이브러리</b> <sub>8개 카테고리 79개 스킬</sub></summary>
 
-- 📊 8개 카테고리로 구성된 77개 전문 금융 스킬
+- 📊 8개 카테고리로 구성된 79개 전문 금융 스킬
 - 🌐 전통 시장부터 크립토 & DeFi까지 완전한 커버리지
 - 🔬 데이터 sourcing부터 정량 리서치까지 포괄하는 기능
 
@@ -376,9 +390,9 @@ clone에서 실행하세요(`pip install -e .`).
 </details>
 
 <details>
-<summary><b>Alpha Zoo</b> <sub>4개 zoo에 걸친 452개 사전 빌드된 quant alpha</sub></summary>
+<summary><b>Alpha Zoo</b> <sub>4개 zoo에 걸친 456개 사전 빌드된 quant alpha</sub></summary>
 
-- 🧬 operator 계층에서 lookahead가 금지된 452개 cross-sectional alpha
+- 🧬 operator 계층에서 lookahead가 금지된 456개 cross-sectional alpha
 - 📈 한 줄 CLI로 IC + IR + alive/reversed/dead 분류 수행
 - 🔬 AST 순수성 게이트 + 300-row lookahead sentinel 테스트 + `pytest-socket` 네트워크 kill-switch
 - 📦 Qlib에 대한 Apache-2 출처 표기, zoo별 `LICENSE.md`에서 수식을 수학적 콘텐츠로 명시
@@ -389,7 +403,7 @@ clone에서 실행하세요(`pip install -e .`).
 | **qlib158** | 154 | Microsoft Qlib `Alpha158` (Apache-2.0, 커밋 고정) | Apache-2.0 |
 | **alpha101** | 101 | Kakushadze (2015), "101 Formulaic Alphas", arXiv:1601.00991 | 수식은 수학적 콘텐츠 |
 | **gtja191** | 191 | 국태군안 (2014), "191 Short-period Trading Alpha Factors" | 수식은 수학적 콘텐츠 |
-| **academic** | 6 | Fama-French 5 + Carhart 모멘텀 (가격 기반 proxy) | 공개 학술 문헌 |
+| **academic** | 10 | Fama-French 5 + Carhart 모멘텀 (가격 기반 proxy) + Jegadeesh reversal + George-Hwang 52-week-high + Amihud illiquidity + Harvey-Siddique skew | 공개 학술 문헌 |
 
 `vibe-trading alpha list`로 카탈로그를 탐색하고, `vibe-trading alpha show <id>`로 수식과 소스 코드를 확인하며, `vibe-trading alpha bench --zoo X --universe Y --period Z`로 zoo 전체를 점수화하세요.
 
@@ -581,7 +595,8 @@ Vibe-Trading은 tool-heavy agent입니다. skills, backtests, memory, swarms가 
 vibe-trading               # interactive TUI
 vibe-trading run -p "..."  # single run
 vibe-trading serve         # API server
-vibe-trading alpha list    # 사전 빌드된 452개 alpha 탐색; show / bench / compare / export-manifest 서브커맨드 사용 가능
+vibe-trading alpha list    # 사전 빌드된 456개 alpha 탐색; show / bench / compare / export-manifest 서브커맨드 사용 가능
+vibe-trading channels status --local  # IM 채널 설정과 설치 힌트 확인
 ```
 
 <details>
@@ -590,7 +605,7 @@ vibe-trading alpha list    # 사전 빌드된 452개 alpha 탐색; show / bench 
 | Command | Description |
 |---------|-------------|
 | `/help` | 모든 명령 표시 |
-| `/skills` | 77개 finance skills 목록 |
+| `/skills` | 79개 finance skills 목록 |
 | `/swarm` | 29개 swarm team presets 목록 |
 | `/swarm run <preset> [vars_json]` | live streaming으로 swarm team 실행 |
 | `/swarm list` | Swarm run history |
@@ -638,6 +653,24 @@ vibe-trading alpha list --zoo gtja191 --limit 10
 vibe-trading alpha show gtja191_171
 vibe-trading alpha bench --zoo gtja191 --universe csi300 --period 2018-2025 --top 20
 ```
+
+</details>
+
+<details>
+<summary><b>IM 채널</b></summary>
+
+IM channel adapter는 외부 채팅 앱을 Web UI와 CLI가 쓰는 같은 session runtime에 연결합니다. 활성화할 어댑터는 `~/.vibe-trading/agent.json`의 `channels` 아래에 설정합니다. SDK 기반 어댑터는 optional extras이며, SDK가 없으면 런타임을 중단하지 않고 recovery hints를 표시합니다.
+
+```bash
+vibe-trading channels status --local   # API 없이 config와 missing SDK hints 확인
+vibe-trading channels status           # 실행 중인 API runtime 조회
+vibe-trading channels start            # API를 통해 enabled adapters 시작
+vibe-trading channels stop             # API를 통해 enabled adapters 중지
+vibe-trading channels login weixin     # 필요한 adapter login hook 실행
+vibe-trading channels pairing --channel telegram list
+```
+
+Built-in adapters는 `websocket`, `telegram`, `slack`, `discord`, `matrix`, `whatsapp`, `signal`, `qq`, `napcat`, `weixin`, `wecom`, `feishu`, `dingtalk`, `msteams`, `email`, `mochat`입니다. 개별 플랫폼은 `pip install "vibe-trading-ai[telegram]"`처럼 설치하거나, 전체 채널 세트는 `pip install "vibe-trading-ai[channels]"`로 설치할 수 있습니다.
 
 </details>
 
@@ -758,6 +791,13 @@ vibe-trading serve --port 8899
 | `PUT` | `/settings/llm` | local LLM settings 업데이트 |
 | `GET` | `/settings/data-sources` | local data source settings 읽기 |
 | `PUT` | `/settings/data-sources` | local data source settings 업데이트 |
+| `GET` | `/channels/status` | IM channel runtime과 adapter status 읽기 |
+| `POST` | `/channels/start` | 설정된 IM channel adapters 시작 |
+| `POST` | `/channels/stop` | 설정된 IM channel adapters 중지 |
+| `POST` | `/channels/pairing/command` | shared store에 sender-pairing command 실행 |
+| `POST` | `/scheduled-runs` | 예약 리서치 작업 생성 (interval-ms 또는 cron) |
+| `GET` | `/scheduled-runs` | 예약된 작업 목록 |
+| `DELETE` | `/scheduled-runs/{job_id}` | 예약 작업 취소 |
 
 Interactive docs: `http://localhost:8899/docs`
 
@@ -773,11 +813,36 @@ Web UI Settings page에서는 local user가 LLM provider/model, base URL, genera
 
 Settings read는 side effect가 없습니다. `GET /settings/llm`과 `GET /settings/data-sources`는 `agent/.env`를 만들지 않으며 project-relative path만 반환합니다. Settings read/write는 credential state를 노출하거나 credential/runtime environment를 업데이트할 수 있으므로 `API_AUTH_KEY`가 설정되어 있으면 인증이 필요합니다. dev mode에서 `API_AUTH_KEY`가 설정되지 않은 경우 settings access는 loopback client에서만 허용됩니다.
 
+같은 Settings page에는 local operator용 **IM 채널** 패널도 있습니다. `/channels/status`를 polling하고 configured/enabled/available/loaded/running 상태와 adapter recovery hints를 표시하며, 터미널로 돌아가지 않고 configured channel runtime을 시작하거나 중지할 수 있습니다.
+
+### Scheduled research (예약 리서치)
+
+리서치 prompt나 backtest를 반복 일정으로 실행합니다. 백그라운드 executor는 **기본적으로 꺼져 있습니다** — `VIBE_TRADING_ENABLE_SCHEDULER=1`로 server를 시작하면 활성화됩니다:
+
+```bash
+VIBE_TRADING_ENABLE_SCHEDULER=1 vibe-trading serve --port 8899
+```
+
+그런 다음 REST로 작업을 생성합니다. `schedule`은 단순 정수(간격, 단위 **밀리초**)이거나 5필드 cron 표현식(`분 시 일 월 요일`)입니다:
+
+```bash
+# 6시간마다 (cron)
+curl -X POST http://localhost:8899/scheduled-runs \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"Scan CSI300 for momentum breakouts and backtest the top 5","schedule":"0 */6 * * *"}'
+
+# 목록 / 취소
+curl http://localhost:8899/scheduled-runs
+curl -X DELETE http://localhost:8899/scheduled-runs/<job_id>
+```
+
+각 실행은 새 agent session에서 `prompt`를 실행하며(선택적 backtest 파라미터는 `config`에 넣습니다), 작업은 `~/.vibe-trading/`에 저장되어 재시작 후에도 유지됩니다. 이 플래그가 없으면 `/scheduled-runs` endpoint는 작업을 기록하지만 실행되지는 않습니다. `API_AUTH_KEY`가 설정된 경우 각 호출에 `-H "Authorization: Bearer <key>"`를 추가하세요.
+
 ---
 
 ## 🔌 MCP Plugin
 
-Vibe-Trading은 모든 MCP-compatible client를 위해 36개 MCP tools를 제공합니다. stdio subprocess로 실행되므로 server setup이 필요 없습니다. 핵심 research tools는 HK/US/crypto에서 API key 없이 작동하고, trading connector tools는 선택된 connector profile을 사용하며, `run_swarm`만 LLM key가 필요합니다.
+Vibe-Trading은 모든 MCP-compatible client를 위해 54개 MCP tools를 제공합니다. stdio subprocess로 실행되므로 server setup이 필요 없습니다. 핵심 research tools는 HK/US/crypto에서 API key 없이 작동하고, trading connector tools는 선택된 connector profile을 사용하며, `run_swarm`만 LLM key가 필요합니다.
 
 <details>
 <summary><b>Claude Desktop</b></summary>
@@ -819,7 +884,7 @@ vibe-trading-mcp --transport sse  # SSE for web clients
 
 </details>
 
-**노출되는 MCP tools(36):** `list_skills`, `load_skill`, `start_research_goal`, `get_research_goal`, `add_goal_evidence`, `update_research_goal_status`, `backtest`, `factor_analysis`, `analyze_options`, `pattern_recognition`, `read_url`, `read_document`, `web_search`, `write_file`, `read_file`, `trading_connections`, `trading_select_connection`, `trading_check`, `trading_account`, `trading_positions`, `trading_orders`, `trading_quote`, `trading_history`, `list_swarm_presets`, `run_swarm`, `get_market_data`, `get_swarm_status`, `get_run_result`, `list_runs`, `reap_stale_runs`, `retry_run`, `analyze_trade_journal`, `extract_shadow_strategy`, `run_shadow_backtest`, `render_shadow_report`, `scan_shadow_signals`.
+**노출되는 MCP tools(54):** `list_skills`, `load_skill`, `start_research_goal`, `get_research_goal`, `add_goal_evidence`, `update_research_goal_status`, `backtest`, `factor_analysis`, `analyze_options`, `pattern_recognition`, `read_url`, `read_document`, `web_search`, `write_file`, `read_file`, `trading_connections`, `trading_select_connection`, `trading_check`, `trading_account`, `trading_positions`, `trading_orders`, `trading_quote`, `trading_history`, `list_swarm_presets`, `run_swarm`, `get_market_data`, `get_fund_flow`, `get_dragon_tiger`, `get_northbound_flow`, `get_margin_trading`, `get_block_trades`, `get_shareholder_count`, `get_lockup_expiry`, `get_sector_info`, `get_research_reports`, `get_stock_news`, `get_sec_filings`, `get_financial_statements`, `get_options_chain`, `get_stock_profile`, `screen_market`, `search_symbol`, `get_macro_series`, `iwencai_search`, `get_swarm_status`, `get_run_result`, `list_runs`, `reap_stale_runs`, `retry_run`, `analyze_trade_journal`, `extract_shadow_strategy`, `run_shadow_backtest`, `render_shadow_report`, `scan_shadow_signals`.
 
 <details>
 <summary><b>ClawHub에서 설치(한 번의 명령)</b></summary>
@@ -839,7 +904,7 @@ ClawHub에서 보기: [clawhub.ai/skills/vibe-trading](https://clawhub.ai/skills
 <details>
 <summary><b>OpenSpace — 자가 진화 스킬</b></summary>
 
-77개 finance skills는 모두 [open-space.cloud](https://open-space.cloud)에 게시되어 있으며 OpenSpace의 self-evolution engine을 통해 자율적으로 발전합니다.
+79개 finance skills는 모두 [open-space.cloud](https://open-space.cloud)에 게시되어 있으며 OpenSpace의 self-evolution engine을 통해 자율적으로 발전합니다.
 
 OpenSpace와 함께 사용하려면 두 MCP server를 agent config에 추가하세요:
 
@@ -861,7 +926,7 @@ OpenSpace와 함께 사용하려면 두 MCP server를 agent config에 추가하�
 }
 ```
 
-OpenSpace는 77개 skills를 모두 자동 발견하여 auto-fix, auto-improve, community sharing을 활성화합니다. OpenSpace-connected agent에서 `search_skills("finance backtest")`로 Vibe-Trading skills를 검색하세요.
+OpenSpace는 79개 skills를 모두 자동 발견하여 auto-fix, auto-improve, community sharing을 활성화합니다. OpenSpace-connected agent에서 `search_skills("finance backtest")`로 Vibe-Trading skills를 검색하세요.
 
 </details>
 
@@ -883,7 +948,7 @@ Vibe-Trading/
 │   │   ├── agent/                  # ReAct agent core
 │   │   │   ├── loop.py             #   5-layer compression + read/write tool batching
 │   │   │   ├── context.py          #   system prompt + auto-recall from persistent memory
-│   │   │   ├── skills.py           #   skill loader (77 bundled + user-created via CRUD)
+│   │   │   ├── skills.py           #   skill loader (79 bundled + user-created via CRUD)
 │   │   │   ├── tools.py            #   tool base class + registry
 │   │   │   ├── memory.py           #   lightweight workspace state per run
 │   │   │   ├── frontmatter.py      #   shared YAML frontmatter parser
@@ -892,7 +957,7 @@ Vibe-Trading/
 │   │   ├── memory/                 # Cross-session persistent memory
 │   │   │   └── persistent.py       #   file-based memory (~/.vibe-trading/memory/)
 │   │   │
-│   │   ├── tools/                  # 31 auto-discovered agent tools
+│   │   ├── tools/                  # 68 auto-discovered agent tools
 │   │   │   ├── backtest_tool.py    #   run backtests
 │   │   │   ├── remember_tool.py    #   cross-session memory (save/recall/forget)
 │   │   │   ├── skill_writer_tool.py #  skill CRUD (save/patch/delete/file)
@@ -901,16 +966,16 @@ Vibe-Trading/
 │   │   │   ├── web_search_tool.py  #   DuckDuckGo web search
 │   │   │   └── ...                 #   bash, file I/O, factor analysis, options, alpha browser + bench, etc.
 │   │   │
-│   │   ├── factors/                # Alpha Zoo — 4개 zoo에 걸친 452개 alpha
+│   │   ├── factors/                # Alpha Zoo — 4개 zoo에 걸친 456개 alpha
 │   │   │   ├── base.py             #   19개 operator (rank/scale/ts_*/delta/decay_linear/safe_div/vwap)
 │   │   │   ├── registry.py         #   AST-only 메타데이터 로딩 + lazy compute + sanity gate
 │   │   │   ├── bench_runner.py     #   IC + alive/reversed/dead 분류
-│   │   │   └── zoo/                #   qlib158 (154) + alpha101 (101) + gtja191 (191) + academic (6)
+│   │   │   └── zoo/                #   qlib158 (154) + alpha101 (101) + gtja191 (191) + academic (10)
 │   │   │
 │   │   ├── api/                    # FastAPI 라우트 모듈
 │   │   │   └── alpha_routes.py     #   /alpha/list, /alpha/{id}, /alpha/bench, SSE stream
 │   │   │
-│   │   ├── skills/                 # 77 finance skills in 8 categories (SKILL.md each)
+│   │   ├── skills/                 # 79 finance skills in 8 categories (SKILL.md each)
 │   │   ├── swarm/                  # Swarm DAG execution engine
 │   │   │   └── presets/            #   29 swarm preset YAML definitions
 │   │   ├── session/                # Multi-turn chat + FTS5 session search
@@ -948,8 +1013,8 @@ Vibe-Trading은 **[HKUDS](https://github.com/HKUDS)** agent ecosystem의 일부�
 <table>
   <tr>
     <td align="center" width="20%">
-      <a href="https://github.com/HKUDS/nanobot"><b>NanoBot</b></a><br>
-      <sub>초경량 개인 AI 어시스턴트</sub>
+      <a href="https://github.com/HKUDS"><b>HKUDS Agents</b></a><br>
+      <sub>Open Agent Infrastructure</sub>
     </td>
     <td align="center" width="20%">
       <a href="https://github.com/HKUDS/AI-Trader"><b>AI-Trader</b></a><br>
@@ -980,12 +1045,12 @@ Vibe-Trading은 **[HKUDS](https://github.com/HKUDS)** agent ecosystem의 일부�
 |-------|---------|--------|
 | **Trust Layer** | 재현 가능한 run cards는 생성 및 Run Detail 표시까지 완료. v1은 tool traces와 citations 추가 | v0 출시 |
 | **Hypothesis Registry** | lifecycle status, data sources, skills, run-card links, invalidation notes를 가진 durable research hypotheses | Backend MVP 출시 |
-| **Research Autopilot** | 수동 실행 우선 research loop: hypothesis → deterministic backtest → evidence report | 다음 |
-| **Data Bridge** | Bring-your-own data: local CSV/Parquet/SQL connectors with schema mapping | Planned |
+| **Research Autopilot** | 수동 실행 우선 research loop: hypothesis → deterministic backtest → evidence report | 1–3단계 출시 |
+| **Data Bridge** | Bring-your-own data: local CSV/Parquet/SQL connectors with schema mapping | 로컬 로더 출시 |
 | **Options Lab** | Vol surface, Greeks dashboard, payoff/scenario explorer | Planned |
 | **Portfolio Studio** | Risk x-ray, constraints, turnover-aware optimizer, rebalance notes | Planned |
 | **Alpha Zoo** | 4개 zoo에 걸친 452개의 사전 빌드된 alpha 인자(Qlib 158 + Kakushadze 101 + GTJA 191 + FF5 + Carhart), 한 줄 CLI 벤치, agent 통합, Web UI | **0.1.8 출시 완료** |
-| **Research Delivery** | Slack / Telegram / email-style channels로 예약 brief 전달 | Planned |
+| **Research Delivery** | Slack / Telegram / email-style IM channels를 통한 예약 brief와 live research sessions | 스케줄러 + IM Runtime 출시 |
 | **Community** | 공유 가능한 skills, presets, strategy cards | Exploring |
 
 ---

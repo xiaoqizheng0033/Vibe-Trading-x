@@ -50,12 +50,25 @@
 
 ## 📰 الأخبار
 
-- **2026-06-19** 🚀 **v0.1.10 — طبقة بيانات عالمية**: تنمو مصادر بيانات السوق من 10 إلى 18 (مجانية **Eastmoney / Sina / Stooq / Yahoo** + محكومة بمفتاح **Finnhub / Alpha Vantage / Tiingo / FMP**، مع fallback مرتّب حسب خطر حظر الـ IP)، إضافةً إلى **18 أداة بيانات للقراءة فقط** (تدفق الأموال، لوحة التنين والنمر، التدفق الشمالي، التداول بالهامش، الصفقات الكتلية، SEC EDGAR + XBRL، القوائم المالية، سلاسل الخيارات، فرز كامل السوق…) عبر الأسهم الصينية / الأمريكية / هونغ كونغ، وكلّها مكشوفة عبر MCP. تتضمّن هذه الإصدارة أيضًا كل تحديثات ما بعد 0.1.9 —— 10 موصّلات وسطاء، و`alpha compare`، وإصلاح موثوقية المزوّدين، وذاكرة تخزين بيانات اختيارية. `pip install -U vibe-trading-ai`
-- **2026-06-18** 🔬 **المرحلة الأولى من Research Autopilot + محمّل Data Bridge محلي، إضافةً إلى تنبيه أمني بشأن Discord**: تربط أداتا `run_research_autopilot` و`generate_backtest_config` الجديدتان مسار **Hypothesis → Research Goal → backtest** من طرف إلى طرف (الآن **50 أداة**)، ويقرأ محمّل **`local`** الجديد بيانات OHLCV مباشرةً من ملفاتك **CSV / Parquet / DuckDB** ([#260](https://github.com/HKUDS/Vibe-Trading/pull/260)، [#252](https://github.com/HKUDS/Vibe-Trading/pull/252)، شكراً @Robin1987China)، إضافةً إلى تحليل استدعاءات أدوات DeepSeek `DSML` ودفعة لتقوية احتواء المعرّفات. ⚠️ **تنبيه أمني**: دعوة المجتمع القديمة على Discord تشير الآن إلى خادم لا نتحكم به (تصيّد بانتحال "تحقّق" محفظة Collab.Land) — أُزيلت بالكامل، وخادم HKUDS ([discord.gg/6TdQnT5xcF](https://discord.gg/6TdQnT5xcF)) هو Discord الرسمي **الوحيد**. لن نطلب منك أبداً ربط محفظة.
-- **2026-06-17** 🧩 **توافق التثبيت + إصلاحات مزوّدي Opus/Kimi**: لم يعد التثبيت الأساسي `pip install vibe-trading-ai` يجلب سلسلة الاعتماد الاختيارية `pyharmonics` / `ta`؛ أصبح كشف الأنماط التوافقية خلف extra باسم `vibe-trading-ai[harmonic]` مع بقاء detector المضمّن متاحاً ([#250](https://github.com/HKUDS/Vibe-Trading/pull/250)، يغلق [#249](https://github.com/HKUDS/Vibe-Trading/issues/249)). ولم يعد Agent loop يرسل رسائل assistant-prefill handoff التي يرفضها Opus 4.8+، كما يمكن لـ Kimi/Moonshot تجاوز `User-Agent` عبر `MOONSHOT_USER_AGENT` ([#248](https://github.com/HKUDS/Vibe-Trading/pull/248)، يغلق [#246](https://github.com/HKUDS/Vibe-Trading/issues/246) و[#204](https://github.com/HKUDS/Vibe-Trading/issues/204))؛ وتغطي اختبارات المتابعة مساري background-result وauto-compact handoff مباشرة ([#251](https://github.com/HKUDS/Vibe-Trading/pull/251)).
+- **2026-06-30** 💬 **بيئة تشغيل قنوات IM لتسليم الأبحاث**: يستطيع Vibe-Trading الآن وصل بيئة تشغيل جلسة agent نفسها بـ 16 محوّلاً مدمجاً للرسائل — WebSocket وTelegram وSlack وDiscord وMatrix وWhatsApp وSignal وQQ/NapCat وWeChat/WeCom وFeishu/Lark وDingTalk وTeams وemail وMochat. تغطي CLI (`vibe-trading channels status/start/stop/login/pairing`) وREST (`/channels/status` و`/channels/start` و`/channels/stop` و`/channels/pairing/command`) ولوحة Web UI Settings الحالة وتلميحات الاسترداد والبدء/الإيقاف وsender pairing؛ وتبقى المحولات المعتمدة على SDK خلف extras مثل `vibe-trading-ai[telegram]` أو `vibe-trading-ai[channels]` ([#341](https://github.com/HKUDS/Vibe-Trading/pull/341)).
+
+- **2026-06-29** 🛡️ **Live advisory safety + Trading 212 read-only connector + Windows/Gemini fixes**: live order guards now have an opt-in, broker-agnostic `PreTradeAdvisoryInterface` that records advisory reviews without bypassing the mandate gate, kill switch, or audit trail ([#328](https://github.com/HKUDS/Vibe-Trading/pull/328), closes [#317](https://github.com/HKUDS/Vibe-Trading/issues/317), thanks @shadowinlife). Trading 212 joins the connector layer with read-only account, positions, orders, history, and instrument-metadata support; `place_order` / `cancel_order` still hard-refuse until a structural paper/live boundary exists ([#321](https://github.com/HKUDS/Vibe-Trading/pull/321), closes [#309](https://github.com/HKUDS/Vibe-Trading/issues/309), thanks @mvanhorn). Windows startup avoids the pandas 3.0 `Timestamp` crash via the `<3.0.0` constraint ([#329](https://github.com/HKUDS/Vibe-Trading/pull/329), closes [#324](https://github.com/HKUDS/Vibe-Trading/issues/324), thanks @hannibal-lee); Gemini `thought_signature` dict-history replay was verified/fixed on `main` ([#318](https://github.com/HKUDS/Vibe-Trading/issues/318)); `.US` financial statements now route to SEC EDGAR instead of Eastmoney ([#325](https://github.com/HKUDS/Vibe-Trading/issues/325)); and the Alpha Library landing page got cache/date/selector/noscript/DNS-prefetch hardening while heavier CSP and social-card follow-ups stay tracked ([#323](https://github.com/HKUDS/Vibe-Trading/issues/323)).
+
+- **2026-06-28** 🧰 **أوامر setup/dev عبر المنصات + تقوية runtime وأدوات الملفات**: يتعامل `vibe-trading setup` و`vibe-trading dev` الآن مع بناء TypeScript على Windows، وتشغيل backend من cwd الصحيح، واستخدام منفذ Vite 5899، وإغلاق العمليات الفرعية بنظافة عند الخروج ([#292](https://github.com/HKUDS/Vibe-Trading/pull/292)، شكراً @digger-yu). كما أصبح polling لحالة Runtime يتدهور بأمان بدل الانهيار ([#322](https://github.com/HKUDS/Vibe-Trading/issues/322))، وتُنظَّف مفاتيح cache الخاصة بـ MCP OAuth ([#313](https://github.com/HKUDS/Vibe-Trading/issues/313))، وشُدِّدت defaults الخاصة بـ OpenAI والتحقق من Robinhood `agent.json` ([#319](https://github.com/HKUDS/Vibe-Trading/pull/319)، [#320](https://github.com/HKUDS/Vibe-Trading/pull/320)، شكراً @mvanhorn)، وحصلت أدوات الملفات على read/write roots منفصلة واختبارات sandbox أوسع ([#299](https://github.com/HKUDS/Vibe-Trading/pull/299)، شكراً @skloxo).
 <details>
 <summary>أخبار سابقة</summary>
 
+- **2026-06-27** 🧯 **مرونة content-filter + تنظيف عقد features في Shadow Account**: أصبحت تشغيلات event-driven وswarm تتجاوز إصابات content-moderation الفردية من LLM، وتعرض تحذيراً في run cards عندما ترتفع معدلات الفلترة، وتتعرف على أسباب Gemini safety finish بدلاً من إيقاف التحليل كاملاً ([#308](https://github.com/HKUDS/Vibe-Trading/pull/308)، يغلق [#307](https://github.com/HKUDS/Vibe-Trading/issues/307)، شكراً @shadowinlife). كما تشترك مراحل استخراج Shadow Account وتوليد الكود في عقد `PRICE_FEATURES` واحد وتحافظ على حدود العوائد بأربع منازل عشرية، ما يمنع drift بين القاعدة والكود وفقدان دقة `prior_5d_return` ([#316](https://github.com/HKUDS/Vibe-Trading/pull/316)، شكراً @Robin1987China).
+- **2026-06-26** 🎯 **دخول مشروط لـ Shadow Account + توجيه tushare لـ ETF/المؤشرات/هونغ كونغ**: أصبحت قواعد Shadow Account المستخرجة تحمل نطاقات RSI / العائد السابق، فيدخل SignalEngine المُولَّد بناءً على شروط حقيقية (RSI ضمن النطاق، والعائد السابق ضمن النطاق) بدلاً من تكرار وتيرة الاحتفاظ بشكل أعمى ([#314](https://github.com/HKUDS/Vibe-Trading/pull/314)، متابعة لـ [#302](https://github.com/HKUDS/Vibe-Trading/pull/302)، شكراً @Robin1987China). كما يوجّه loader الخاص بـ tushare صناديق ETF/LOF إلى `fund_daily()`، والمؤشرات إلى `index_daily()`، وأسهم هونغ كونغ إلى `hk_daily()` بدلاً من استدعاء `daily()` الذي يعيد فراغاً بصمت لغير الأسهم، مع تحذيرات لكل رمز عن النتائج الفارغة والجلب الجزئي ([#315](https://github.com/HKUDS/Vibe-Trading/pull/315)، يغلق [#310](https://github.com/HKUDS/Vibe-Trading/issues/310)، شكراً @shadowinlife).
+- **2026-06-25** 🧪 **JSON صارم للتحقق + سياق agent أهدأ**: أصبح مسار التحقق المستقل للاختبار الخلفي يطبّع قيم `NaN` / `Infinity` المتداخلة قبل كتابة `artifacts/validation.json` أو stdout في CLI، فلا تتعطل parsers الصارمة أمام payload التحقق ([#306](https://github.com/HKUDS/Vibe-Trading/pull/306)، شكراً @gyx09212214-prog). كما صار prompt الخاص بالـ agent يستنتج عدد مصادر البيانات الحالي من loader registry، ولا تعمل `_microcompact()` إلا عند وجود ضغط tokens حقيقي، فلا تُمسح نتائج الأدوات القديمة مبكرًا في التشغيلات القصيرة ([#296](https://github.com/HKUDS/Vibe-Trading/pull/296)، يغلق [#282](https://github.com/HKUDS/Vibe-Trading/issues/282)، شكراً @MarkfuGod).
+- **2026-06-24** 🎯 **سياق سعري لـ Shadow Account + واجهة صينية تفاعلية + إصلاح auth على LAN**: أصبح استخراج قواعد Shadow Account يرى سياق الدخول الآمن point-in-time — `entry_rsi14` و`prior_5d_return` عبر loader registry عند `buy_dt` — مع تدهور graceful عند عدم توفر الشبكة أو البيانات ([#302](https://github.com/HKUDS/Vibe-Trading/pull/302)، متابعة لـ [#295](https://github.com/HKUDS/Vibe-Trading/issues/295)، شكراً @Robin1987China). كما انتقلت اللوحات الرئيسية في Web UI إلى ترجمات English / zh-CN تفاعلية عبر charts وchat وAlpha Library وCorrelation وRun Detail ([#301](https://github.com/HKUDS/Vibe-Trading/pull/301)، شكراً @skloxo). وبعد تحصين CSRF، عادت deployments البعيدة same-origin التي تضبط `API_AUTH_KEY` إلى دعم POST / upload، بينما تبقى origins المتقاطعة غير المطابقة محظورة ([#304](https://github.com/HKUDS/Vibe-Trading/pull/304)، شكراً @Hinotoi-agent).
+- **2026-06-23** 🛡️ **تحصين CSRF لواجهة API المحلية**: لم يعد بإمكان صفحة ويب خبيثة إرسال طلبات cross-site غير آمنة (POST/PUT/DELETE) إلى واجهة loopback — فـ CORS يمنع قراءة الاستجابة لكنه لا يمنع الأثر الجانبي، لذا أصبحت ثقة dev-mode الخاصة بـ loopback تطبّق حارس cross-site الحالي على الطرق غير الآمنة **قبل** منحها الثقة. الطرق الآمنة ورفع الملفات عبر CLI المحلي / غير المتصفح غير متأثرة ([#293](https://github.com/HKUDS/Vibe-Trading/pull/293)، شكراً @Hinotoi-agent).
+- **2026-06-22** 🔧 **إصلاح OAuth لتفويض التداول الحي + إصلاح عنوان Alpha Zoo**: يُبقي `connector authorize` الآن مصافحة OAuth مفتوحة طوال تسجيل دخول الوسيط الذي قد يستغرق دقائق (قابل للضبط عبر `VIBE_LIVE_AUTHORIZE_TIMEOUT_SECONDS`)، ولم يَعُد يُشغِّل خادم callback منافسًا عند إعادة المحاولة، فأصبح الرمز يُحفَظ فعلاً ([#281](https://github.com/HKUDS/Vibe-Trading/pull/281)، يغلق [#259](https://github.com/HKUDS/Vibe-Trading/issues/259)، شكراً @Robin1987China). ولم تَعُد صفحة Alpha Zoo تعرض عدد الـ alpha مرتين ([#287](https://github.com/HKUDS/Vibe-Trading/pull/287)، يغلق [#286](https://github.com/HKUDS/Vibe-Trading/issues/286)، شكراً @digger-yu). كما حصلت الأبحاث المجدولة على وثائق استخدام شاملة ([#288](https://github.com/HKUDS/Vibe-Trading/pull/288)).
+- **2026-06-21** ⏰ **مُنفِّذ الأبحاث المجدولة + مكتبة التقارير + إسناد ما بعد الاختبار الخلفي**: تعمل الأبحاث المجدولة الآن **من طرف إلى طرف** — مُنفِّذ خلفي مُعطَّل افتراضيًا (`VIBE_TRADING_ENABLE_SCHEDULER`) يُشغِّل المهام المستحقة وفق interval/cron عبر بيئة تشغيل الجلسة ([#278](https://github.com/HKUDS/Vibe-Trading/pull/278)، شكراً @mvanhorn، يغلق [#254](https://github.com/HKUDS/Vibe-Trading/issues/254)). وتَسرُد صفحة **مكتبة التشغيل `/reports`** الجديدة عمليات التشغيل ذات التقارير وتبحث فيها وتُرشِّحها، مع روابط إلى Run Detail + Compare ([#224](https://github.com/HKUDS/Vibe-Trading/pull/224)، شكراً @LemonCANDY42). وبعد كل اختبار خلفي يُجري الوكيل الآن **إسنادًا متعدّد الطبقات** — الرابحون/الخاسرون على مستوى الصفقة، وانحدار بيتا، وتحليل أنظمة السوق (regime)، واختبار مونت كارلو للتباديل — مشروطًا بتوفّر البيانات والتوجيه ([#280](https://github.com/HKUDS/Vibe-Trading/pull/280)، شكراً @shadowinlife).
+- **2026-06-20** 🔬 **اكتمال حلقة Research Autopilot (المرحلة 3) + حارس سلامة OHLC على حدود المُحمِّل + 4 عوامل ألفا أكاديمية**: أصبح **Research Autopilot** ينفّذ **الفرضية → محرّك الإشارة → الاختبار الخلفي** من طرف إلى طرف — حيث يكتب `scaffold_signal_engine` محرّكًا مطابقًا لعقد runner، ويعيد `link_autopilot_backtest` مقاييس التشغيل تلقائيًا إلى الفرضية (**68 أداة**) ([#267](https://github.com/HKUDS/Vibe-Trading/pull/267)). ويُسقط **فحص سلامة OHLC** البنيوي الأشرطة المعيبة (`high < low`، الأسعار غير الموجبة، وعدم إحاطة high/low بـ open/close) مركزيًا عند حدود المُحمِّل، بما يحمي كل مصادر البيانات ([#274](https://github.com/HKUDS/Vibe-Trading/pull/274)، شكراً @Shizoqua). كما تتوسّع **عائلة عوامل ألفا الأكاديمية من 6 إلى 10** — انعكاس Jegadeesh، وقمة 52 أسبوعًا لـ George-Hwang، وانعدام سيولة Amihud، والتواء Harvey-Siddique (**456 عاملًا**) ([#277](https://github.com/HKUDS/Vibe-Trading/pull/277)، شكراً @Robin1987China).
+- **2026-06-19** 🚀 **v0.1.10 — طبقة بيانات عالمية**: تنمو مصادر بيانات السوق من 10 إلى 18 (مجانية **Eastmoney / Sina / Stooq / Yahoo** + محكومة بمفتاح **Finnhub / Alpha Vantage / Tiingo / FMP**، مع fallback مرتّب حسب خطر حظر الـ IP)، إضافةً إلى **18 أداة بيانات للقراءة فقط** (تدفق الأموال، لوحة التنين والنمر، التدفق الشمالي، التداول بالهامش، الصفقات الكتلية، SEC EDGAR + XBRL، القوائم المالية، سلاسل الخيارات، فرز كامل السوق…) عبر الأسهم الصينية / الأمريكية / هونغ كونغ، وكلّها مكشوفة عبر MCP. تتضمّن هذه الإصدارة أيضًا كل تحديثات ما بعد 0.1.9 —— 10 موصّلات وسطاء، و`alpha compare`، وإصلاح موثوقية المزوّدين، وذاكرة تخزين بيانات اختيارية. `pip install -U vibe-trading-ai`
+- **2026-06-18** 🔬 **المرحلة الأولى من Research Autopilot + محمّل Data Bridge محلي، إضافةً إلى تنبيه أمني بشأن Discord**: تربط أداتا `run_research_autopilot` و`generate_backtest_config` الجديدتان مسار **Hypothesis → Research Goal → backtest** من طرف إلى طرف (الآن **50 أداة**)، ويقرأ محمّل **`local`** الجديد بيانات OHLCV مباشرةً من ملفاتك **CSV / Parquet / DuckDB** ([#260](https://github.com/HKUDS/Vibe-Trading/pull/260)، [#252](https://github.com/HKUDS/Vibe-Trading/pull/252)، شكراً @Robin1987China)، إضافةً إلى تحليل استدعاءات أدوات DeepSeek `DSML` ودفعة لتقوية احتواء المعرّفات. ⚠️ **تنبيه أمني**: دعوة المجتمع القديمة على Discord تشير الآن إلى خادم لا نتحكم به (تصيّد بانتحال "تحقّق" محفظة Collab.Land) — أُزيلت بالكامل، وخادم HKUDS ([discord.gg/6TdQnT5xcF](https://discord.gg/6TdQnT5xcF)) هو Discord الرسمي **الوحيد**. لن نطلب منك أبداً ربط محفظة.
+- **2026-06-17** 🧩 **توافق التثبيت + إصلاحات مزوّدي Opus/Kimi**: لم يعد التثبيت الأساسي `pip install vibe-trading-ai` يجلب سلسلة الاعتماد الاختيارية `pyharmonics` / `ta`؛ أصبح كشف الأنماط التوافقية خلف extra باسم `vibe-trading-ai[harmonic]` مع بقاء detector المضمّن متاحاً ([#250](https://github.com/HKUDS/Vibe-Trading/pull/250)، يغلق [#249](https://github.com/HKUDS/Vibe-Trading/issues/249)). ولم يعد Agent loop يرسل رسائل assistant-prefill handoff التي يرفضها Opus 4.8+، كما يمكن لـ Kimi/Moonshot تجاوز `User-Agent` عبر `MOONSHOT_USER_AGENT` ([#248](https://github.com/HKUDS/Vibe-Trading/pull/248)، يغلق [#246](https://github.com/HKUDS/Vibe-Trading/issues/246) و[#204](https://github.com/HKUDS/Vibe-Trading/issues/204))؛ وتغطي اختبارات المتابعة مساري background-result وauto-compact handoff مباشرة ([#251](https://github.com/HKUDS/Vibe-Trading/pull/251)).
 - **2026-06-16** 🛡️ **تعزيز الأمان/API + alias لـ GLM/Zhipu**: تتطلب كتابات Settings المصادقة عند تفعيلها ([#245](https://github.com/HKUDS/Vibe-Trading/pull/245))؛ وتتطلب أدوات shell-capable في جلسات API تفعيلًا صريحًا عبر `VIBE_TRADING_ENABLE_SHELL_TOOLS=1` ([#243](https://github.com/HKUDS/Vibe-Trading/pull/243))؛ ويتطلب local shutdown المصادقة عند ضبط API key ([#241](https://github.com/HKUDS/Vibe-Trading/pull/241))؛ وتُرفض Host التي تبدو كـ loopback لكنها غير موثوقة بدل معاملتها كمحلية ([#242](https://github.com/HKUDS/Vibe-Trading/pull/242)). كما صُقلت تفاصيل التشغيل: يتزامن Web chat مع المحاولات المكتملة ([#236](https://github.com/HKUDS/Vibe-Trading/pull/236))، وتُصدر run cards صيغة strict JSON للمقاييس غير المنتهية ([#238](https://github.com/HKUDS/Vibe-Trading/pull/238))، وتتراجع قيم `RSSHUB_TIMEOUT_S` / `RSSHUB_FETCH_BUDGET_S` المشوهة بأمان ([#240](https://github.com/HKUDS/Vibe-Trading/pull/240))، وثُبّت fallback إعادة المحاولة في ddgs باختبار انحدار ([#239](https://github.com/HKUDS/Vibe-Trading/pull/239)). وأصبح GLM/Zhipu alias من الدرجة الأولى مع استنتاج اسم النموذج ([#247](https://github.com/HKUDS/Vibe-Trading/pull/247)، يغلق [#237](https://github.com/HKUDS/Vibe-Trading/issues/237)).
 
 - **2026-06-15** 🧭 **متانة بحث الويب + إصلاحات استمرارية التشغيل في واجهة الويب**: لم يعد `web_search` يفشل عند تقييد مزوّد بحث واحد——إذ يستعلم الآن عدة محركات مجانية بلا مفاتيح بالترتيب (DuckDuckGo، Google، Bing، Brave، Mojeek، Yahoo) مع إعادة محاولة/تراجع، ويعامل "لا نتائج" كإجابة فارغة لا كخطأ، ويعيد رسالة قابلة للتنفيذ بدل ❌ مجرّدة عندما تُقيَّد كل المحركات (يمكن تجاوز قائمة المحركات عبر `VIBE_TRADING_SEARCH_BACKENDS`) ([#232](https://github.com/HKUDS/Vibe-Trading/pull/232)، يغلق [#231](https://github.com/HKUDS/Vibe-Trading/issues/231)، شكراً @Ethan-sun01). وفي واجهة الويب، لم يعد تبديل الصفحات أثناء التشغيل يُجمِّده——إذ تعيد المحادثة الاشتراك في البث الحي وتعيد تشغيل التقدّم الفائت عند العودة ([#234](https://github.com/HKUDS/Vibe-Trading/pull/234))——وأصبح زر الإيقاف يسري أثناء البث وبين الأدوات لا عند حدود التكرار فقط ([#235](https://github.com/HKUDS/Vibe-Trading/pull/235))، ما يغلق شِقَّي [#229](https://github.com/HKUDS/Vibe-Trading/issues/229) (شكراً @kalkinj). كما أصبح محمّل baostock يقبل الرموز الأصلية `sh.601398` / `sz.000001` إلى جانب صيغة tushare `601398.SH` ([#230](https://github.com/HKUDS/Vibe-Trading/pull/230)، شكراً @bhlt).
@@ -195,8 +208,9 @@ Vibe-Trading مساحة عمل بحثية مفتوحة المصدر تحول ا�
 | **مراجعة صفقاتك الخاصة** | قراءة سجلات الوسطاء، وتشخيص السلوك، واستخراج القواعد، ومقارنات Shadow Account. |
 | **تحسين الأبحاث المتكررة** | الذاكرة الدائمة والمهارات القابلة للتحرير تحول الروتينات المفيدة إلى تدفقات قابلة لإعادة الاستخدام. |
 | **تشغيل فرق محللين** | مراجعات بحث متعددة الوكلاء لتدفقات الاستثمار والكم والكريبتو والماكرو والمخاطر. |
+| **وصل الأبحاث بقنوات IM** | إدارة بيئة جلسة واحدة عبر WebSocket وTelegram وSlack وDiscord وMatrix وWhatsApp وSignal وQQ/NapCat وWeChat/WeCom وFeishu/Lark وDingTalk وTeams وemail وMochat من CLI وREST وWeb UI. |
 | **إنتاج مخرجات قابلة للاستخدام** | تقارير، وTradingView Pine Script، وTDX، وMetaTrader 5، وأدوات MCP، وجلسات بحث لاحقة. |
-| **bench ألفا zoo جاهزة** | تشغيل IC + IR + تصنيف alive/reversed/dead عبر 452 ألفا (Qlib 158 + Kakushadze 101 + GTJA 191 + FF5 + Carhart) بسطر أوامر واحد على universe الخاص بك. |
+| **bench ألفا zoo جاهزة** | تشغيل IC + IR + تصنيف alive/reversed/dead عبر 456 ألفا (Qlib 158 + Kakushadze 101 + GTJA 191 + FF5 + Carhart) بسطر أوامر واحد على universe الخاص بك. |
 
 ---
 
@@ -287,9 +301,9 @@ vibe-trading run -p "Analyze my trading behavior, extract my shadow strategy, an
 القوائم التفصيلية مطوية أدناه حتى يبقى README سهل القراءة. افتحها عندما تريد فحص اللبنات المتاحة.
 
 <details>
-<summary><b>مكتبة المهارات المالية</b> <sub>77 مهارة عبر 8 فئات</sub></summary>
+<summary><b>مكتبة المهارات المالية</b> <sub>79 مهارة عبر 8 فئات</sub></summary>
 
-- 📊 77 مهارة مالية متخصصة منظمة في 8 فئات
+- 📊 79 مهارة مالية متخصصة منظمة في 8 فئات
 - 🌐 تغطية كاملة من الأسواق التقليدية إلى الكريبتو وDeFi
 - 🔬 قدرات شاملة من مصادر البيانات إلى البحث الكمي
 
@@ -376,9 +390,9 @@ vibe-trading run -p "Analyze my trading behavior, extract my shadow strategy, an
 </details>
 
 <details>
-<summary><b>Alpha Zoo</b> <sub>452 ألفا كمّي جاهز عبر 4 zoos</sub></summary>
+<summary><b>Alpha Zoo</b> <sub>456 ألفا كمّي جاهز عبر 4 zoos</sub></summary>
 
-- 🧬 452 ألفا cross-sectional، مع منع lookahead على طبقة العوامل (operators)
+- 🧬 456 ألفا cross-sectional، مع منع lookahead على طبقة العوامل (operators)
 - 📈 IC + IR + تصنيف alive/reversed/dead بأمر CLI واحد
 - 🔬 بوابة نقاء AST + اختبار حماية lookahead بـ 300 صف + قاطع شبكة عبر `pytest-socket`
 - 📦 إسناد Apache-2 لـ Qlib؛ ملف `LICENSE.md` لكل zoo يصرّح بأن الصيغ محتوى رياضي
@@ -389,7 +403,7 @@ vibe-trading run -p "Analyze my trading behavior, extract my shadow strategy, an
 | **qlib158** | 154 | Microsoft Qlib `Alpha158` (Apache-2.0، مثبّت على commit) | Apache-2.0 |
 | **alpha101** | 101 | Kakushadze (2015)، "101 Formulaic Alphas"، arXiv:1601.00991 | الصيغ محتوى رياضي |
 | **gtja191** | 191 | Guotai Junan (2014)، "191 Short-period Trading Alpha Factors" | الصيغ محتوى رياضي |
-| **academic** | 6 | Fama-French 5 + Carhart momentum (proxy قائم على الأسعار) | أدبيات أكاديمية عامة |
+| **academic** | 10 | Fama-French 5 + Carhart momentum (proxy قائم على الأسعار) + Jegadeesh reversal + George-Hwang 52-week-high + Amihud illiquidity + Harvey-Siddique skew | أدبيات أكاديمية عامة |
 
 شغّل `vibe-trading alpha list` للتصفح، و`vibe-trading alpha show <id>` للحصول على الصيغ + المصدر، و`vibe-trading alpha bench --zoo X --universe Y --period Z` لتقييم zoo كاملة.
 
@@ -581,7 +595,8 @@ Vibe-Trading وكيل كثيف الأدوات؛ المهارات والاختب�
 vibe-trading               # interactive TUI
 vibe-trading run -p "..."  # single run
 vibe-trading serve         # API server
-vibe-trading alpha list    # استعرض 452 ألفا جاهز؛ متاح show / bench / compare / export-manifest
+vibe-trading alpha list    # استعرض 456 ألفا جاهز؛ متاح show / bench / compare / export-manifest
+vibe-trading channels status --local  # فحص إعدادات قنوات IM وتلميحات التثبيت
 ```
 
 <details>
@@ -590,7 +605,7 @@ vibe-trading alpha list    # استعرض 452 ألفا جاهز؛ متاح show 
 | الأمر | الوصف |
 |---------|-------------|
 | `/help` | عرض كل الأوامر |
-| `/skills` | عرض كل المهارات المالية الـ 77 |
+| `/skills` | عرض كل المهارات المالية الـ 79 |
 | `/swarm` | عرض إعدادات فرق السرب الـ 29 |
 | `/swarm run <preset> [vars_json]` | تشغيل فريق سرب مع بث مباشر |
 | `/swarm list` | سجل تشغيلات السرب |
@@ -638,6 +653,24 @@ vibe-trading alpha list --zoo gtja191 --limit 10
 vibe-trading alpha show gtja191_171
 vibe-trading alpha bench --zoo gtja191 --universe csi300 --period 2018-2025 --top 20
 ```
+
+</details>
+
+<details>
+<summary><b>قنوات IM</b></summary>
+
+تصل محولات IM تطبيقات الدردشة الخارجية ببيئة الجلسة نفسها التي يستخدمها Web UI وCLI. اضبط المحولات المفعّلة تحت `channels` في `~/.vibe-trading/agent.json`. المحولات المعتمدة على SDK اختيارية عبر extras، وعند غياب SDK تعرض تلميحات استرداد بدلاً من إسقاط runtime.
+
+```bash
+vibe-trading channels status --local   # فحص config وتلميحات SDK الناقصة دون API
+vibe-trading channels status           # الاستعلام عن API runtime الجاري
+vibe-trading channels start            # بدء المحولات المفعّلة عبر API
+vibe-trading channels stop             # إيقاف المحولات المفعّلة عبر API
+vibe-trading channels login weixin     # تشغيل hook تسجيل الدخول عند الحاجة
+vibe-trading channels pairing --channel telegram list
+```
+
+تشمل المحولات المدمجة `websocket` و`telegram` و`slack` و`discord` و`matrix` و`whatsapp` و`signal` و`qq` و`napcat` و`weixin` و`wecom` و`feishu` و`dingtalk` و`msteams` و`email` و`mochat`. يمكنك تثبيت منصة محددة مثل `pip install "vibe-trading-ai[telegram]"` أو تثبيت المجموعة كاملة عبر `pip install "vibe-trading-ai[channels]"`.
 
 </details>
 
@@ -758,6 +791,13 @@ vibe-trading serve --port 8899
 | `PUT` | `/settings/llm` | تحديث إعدادات LLM المحلية |
 | `GET` | `/settings/data-sources` | قراءة إعدادات مصادر البيانات المحلية |
 | `PUT` | `/settings/data-sources` | تحديث إعدادات مصادر البيانات المحلية |
+| `GET` | `/channels/status` | قراءة حالة IM channel runtime والمحولات |
+| `POST` | `/channels/start` | بدء محولات IM configured |
+| `POST` | `/channels/stop` | إيقاف محولات IM configured |
+| `POST` | `/channels/pairing/command` | تنفيذ أمر sender-pairing على shared store |
+| `POST` | `/scheduled-runs` | إنشاء مهمة بحث مجدولة (interval-ms أو cron) |
+| `GET` | `/scheduled-runs` | سرد المهام المجدولة |
+| `DELETE` | `/scheduled-runs/{job_id}` | إلغاء مهمة مجدولة |
 
 توثيق تفاعلي: `http://localhost:8899/docs`
 
@@ -773,11 +813,36 @@ vibe-trading serve --port 8899
 
 قراءات Settings بلا آثار جانبية: لا تنشئ `GET /settings/llm` ولا `GET /settings/data-sources` ملف `agent/.env`، ولا تعيدان إلا مسارات نسبية للمشروع. قد تكشف قراءات وكتابات Settings حالة بيانات الاعتماد أو تحدث بيانات الاعتماد/بيئة التشغيل، لذلك تتطلب `API_AUTH_KEY` عند ضبطه. إذا كان `API_AUTH_KEY` غير مضبوط في وضع التطوير، فلا يقبل الوصول إلى Settings إلا من عملاء loopback.
 
+تحتوي صفحة Settings نفسها على لوحة **قنوات IM** للمشغل المحلي. تستطلع `/channels/status`، وتعرض حالات configured/enabled/available/loaded/running وتلميحات استرداد المحولات، ويمكنها بدء أو إيقاف channel runtime configured دون العودة إلى الطرفية.
+
+### البحث المجدول (Scheduled research)
+
+شغّل prompt بحثي أو backtest وفق جدول متكرر. المنفّذ الخلفي **معطّل افتراضياً** — شغّل الخادم بـ `VIBE_TRADING_ENABLE_SCHEDULER=1` لتفعيله:
+
+```bash
+VIBE_TRADING_ENABLE_SCHEDULER=1 vibe-trading serve --port 8899
+```
+
+ثم أنشئ المهام عبر REST. الحقل `schedule` إما عدد صحيح بسيط (الفاصل بـ**المللي ثانية**) أو تعبير cron من 5 حقول (`دقيقة ساعة يوم شهر يوم-الأسبوع`):
+
+```bash
+# كل 6 ساعات (cron)
+curl -X POST http://localhost:8899/scheduled-runs \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"Scan CSI300 for momentum breakouts and backtest the top 5","schedule":"0 */6 * * *"}'
+
+# السرد / الإلغاء
+curl http://localhost:8899/scheduled-runs
+curl -X DELETE http://localhost:8899/scheduled-runs/<job_id>
+```
+
+كل تشغيل ينفّذ `prompt` في جلسة agent جديدة (تُوضع معلمات backtest الاختيارية في `config`)، وتُحفظ المهام تحت `~/.vibe-trading/` فتبقى بعد إعادة التشغيل. بدون هذه الراية، تسجّل نقاط `/scheduled-runs` المهام لكن لا يُطلق شيء. أضف `-H "Authorization: Bearer <key>"` لكل طلب عند ضبط `API_AUTH_KEY`.
+
 ---
 
 ## 🔌 MCP Plugin
 
-يعرض Vibe-Trading 36 أداة MCP لأي عميل متوافق مع MCP. يعمل كعملية stdio فرعية، دون إعداد خادم. أدوات البحث الأساسية تعمل دون أي مفاتيح API لأسواق HK/US/crypto؛ وأدوات connector للتداول تستخدم profile الموصل المختار، ويحتاج `run_swarm` وحده إلى مفتاح LLM.
+يعرض Vibe-Trading 54 أداة MCP لأي عميل متوافق مع MCP. يعمل كعملية stdio فرعية، دون إعداد خادم. أدوات البحث الأساسية تعمل دون أي مفاتيح API لأسواق HK/US/crypto؛ وأدوات connector للتداول تستخدم profile الموصل المختار، ويحتاج `run_swarm` وحده إلى مفتاح LLM.
 
 <details>
 <summary><b>Claude Desktop</b></summary>
@@ -819,7 +884,7 @@ vibe-trading-mcp --transport sse  # SSE for web clients
 
 </details>
 
-**أدوات MCP المعروضة (36):** `list_skills`, `load_skill`, `start_research_goal`, `get_research_goal`, `add_goal_evidence`, `update_research_goal_status`, `backtest`, `factor_analysis`, `analyze_options`, `pattern_recognition`, `read_url`, `read_document`, `web_search`, `write_file`, `read_file`, `trading_connections`, `trading_select_connection`, `trading_check`, `trading_account`, `trading_positions`, `trading_orders`, `trading_quote`, `trading_history`, `list_swarm_presets`, `run_swarm`, `get_market_data`, `get_swarm_status`, `get_run_result`, `list_runs`, `reap_stale_runs`, `retry_run`, `analyze_trade_journal`, `extract_shadow_strategy`, `run_shadow_backtest`, `render_shadow_report`, `scan_shadow_signals`.
+**أدوات MCP المعروضة (54):** `list_skills`, `load_skill`, `start_research_goal`, `get_research_goal`, `add_goal_evidence`, `update_research_goal_status`, `backtest`, `factor_analysis`, `analyze_options`, `pattern_recognition`, `read_url`, `read_document`, `web_search`, `write_file`, `read_file`, `trading_connections`, `trading_select_connection`, `trading_check`, `trading_account`, `trading_positions`, `trading_orders`, `trading_quote`, `trading_history`, `list_swarm_presets`, `run_swarm`, `get_market_data`, `get_fund_flow`, `get_dragon_tiger`, `get_northbound_flow`, `get_margin_trading`, `get_block_trades`, `get_shareholder_count`, `get_lockup_expiry`, `get_sector_info`, `get_research_reports`, `get_stock_news`, `get_sec_filings`, `get_financial_statements`, `get_options_chain`, `get_stock_profile`, `screen_market`, `search_symbol`, `get_macro_series`, `iwencai_search`, `get_swarm_status`, `get_run_result`, `list_runs`, `reap_stale_runs`, `retry_run`, `analyze_trade_journal`, `extract_shadow_strategy`, `run_shadow_backtest`, `render_shadow_report`, `scan_shadow_signals`.
 
 <details>
 <summary><b>التثبيت من ClawHub (أمر واحد)</b></summary>
@@ -839,7 +904,7 @@ npx clawhub@latest install vibe-trading --force
 <details>
 <summary><b>OpenSpace — مهارات ذاتية التطور</b></summary>
 
-كل المهارات المالية الـ 77 منشورة على [open-space.cloud](https://open-space.cloud) وتتطور ذاتياً عبر محرك التطور الذاتي في OpenSpace.
+كل المهارات المالية الـ 79 منشورة على [open-space.cloud](https://open-space.cloud) وتتطور ذاتياً عبر محرك التطور الذاتي في OpenSpace.
 
 للاستخدام مع OpenSpace، أضف خادمي MCP إلى إعداد وكيلك:
 
@@ -861,7 +926,7 @@ npx clawhub@latest install vibe-trading --force
 }
 ```
 
-سيكتشف OpenSpace كل المهارات الـ 77 تلقائياً، مما يتيح auto-fix وauto-improve والمشاركة المجتمعية. ابحث عن مهارات Vibe-Trading عبر `search_skills("finance backtest")` في أي وكيل متصل بـ OpenSpace.
+سيكتشف OpenSpace كل المهارات الـ 79 تلقائياً، مما يتيح auto-fix وauto-improve والمشاركة المجتمعية. ابحث عن مهارات Vibe-Trading عبر `search_skills("finance backtest")` في أي وكيل متصل بـ OpenSpace.
 
 </details>
 
@@ -883,7 +948,7 @@ Vibe-Trading/
 │   │   ├── agent/                  # ReAct agent core
 │   │   │   ├── loop.py             #   5-layer compression + read/write tool batching
 │   │   │   ├── context.py          #   system prompt + auto-recall from persistent memory
-│   │   │   ├── skills.py           #   skill loader (77 bundled + user-created via CRUD)
+│   │   │   ├── skills.py           #   skill loader (79 bundled + user-created via CRUD)
 │   │   │   ├── tools.py            #   tool base class + registry
 │   │   │   ├── memory.py           #   lightweight workspace state per run
 │   │   │   ├── frontmatter.py      #   shared YAML frontmatter parser
@@ -892,7 +957,7 @@ Vibe-Trading/
 │   │   ├── memory/                 # Cross-session persistent memory
 │   │   │   └── persistent.py       #   file-based memory (~/.vibe-trading/memory/)
 │   │   │
-│   │   ├── tools/                  # 31 auto-discovered agent tools
+│   │   ├── tools/                  # 68 auto-discovered agent tools
 │   │   │   ├── backtest_tool.py    #   run backtests
 │   │   │   ├── remember_tool.py    #   cross-session memory (save/recall/forget)
 │   │   │   ├── skill_writer_tool.py #  skill CRUD (save/patch/delete/file)
@@ -901,16 +966,16 @@ Vibe-Trading/
 │   │   │   ├── web_search_tool.py  #   DuckDuckGo web search
 │   │   │   └── ...                 #   bash, file I/O, factor analysis, options, alpha browser + bench, etc.
 │   │   │
-│   │   ├── factors/                # Alpha Zoo — 452 ألفا عبر 4 zoos
+│   │   ├── factors/                # Alpha Zoo — 456 ألفا عبر 4 zoos
 │   │   │   ├── base.py             #   19 عاملاً (rank/scale/ts_*/delta/decay_linear/safe_div/vwap)
 │   │   │   ├── registry.py         #   تحميل بيانات وصفية AST فقط + حساب كسول + بوابات سلامة
 │   │   │   ├── bench_runner.py     #   IC + تصنيف alive/reversed/dead
-│   │   │   └── zoo/                #   qlib158 (154) + alpha101 (101) + gtja191 (191) + academic (6)
+│   │   │   └── zoo/                #   qlib158 (154) + alpha101 (101) + gtja191 (191) + academic (10)
 │   │   │
 │   │   ├── api/                    # وحدات مسارات FastAPI
 │   │   │   └── alpha_routes.py     #   /alpha/list, /alpha/{id}, /alpha/bench, SSE stream
 │   │   │
-│   │   ├── skills/                 # 77 finance skills in 8 categories (SKILL.md each)
+│   │   ├── skills/                 # 79 finance skills in 8 categories (SKILL.md each)
 │   │   ├── swarm/                  # Swarm DAG execution engine
 │   │   │   └── presets/            #   29 swarm preset YAML definitions
 │   │   ├── session/                # Multi-turn chat + FTS5 session search
@@ -948,8 +1013,8 @@ Vibe-Trading جزء من نظام وكلاء **[HKUDS](https://github.com/HKUDS)
 <table>
   <tr>
     <td align="center" width="20%">
-      <a href="https://github.com/HKUDS/nanobot"><b>NanoBot</b></a><br>
-      <sub>Ultra-Lightweight Personal AI Assistant</sub>
+      <a href="https://github.com/HKUDS"><b>HKUDS Agents</b></a><br>
+      <sub>Open Agent Infrastructure</sub>
     </td>
     <td align="center" width="20%">
       <a href="https://github.com/HKUDS/AI-Trader"><b>AI-Trader</b></a><br>
@@ -980,12 +1045,12 @@ Vibe-Trading جزء من نظام وكلاء **[HKUDS](https://github.com/HKUDS)
 |-------|---------|--------|
 | **Trust Layer** | بطاقات تشغيل قابلة لإعادة الإنتاج تُنتج وتظهر في Run Detail؛ يضيف v1 آثار الأدوات والاستشهادات | v0 شُحن |
 | **Hypothesis Registry** | فرضيات بحثية دائمة مع حالة lifecycle ومصادر بيانات ومهارات وروابط run-card وملاحظات إبطال | Backend MVP شُحن |
-| **Research Autopilot** | حلقة بحث يدوية أولاً: فرضية → اختبار رجعي حتمي → تقرير أدلة | التالي |
-| **Data Bridge** | أحضر بياناتك: موصلات CSV/Parquet/SQL محلية مع schema mapping | مخطط |
+| **Research Autopilot** | حلقة بحث يدوية أولاً: فرضية → اختبار رجعي حتمي → تقرير أدلة | المراحل 1–3 شُحنت |
+| **Data Bridge** | أحضر بياناتك: موصلات CSV/Parquet/SQL محلية مع schema mapping | المُحمِّل المحلي شُحن |
 | **Options Lab** | سطح تقلب، ولوحة Greeks، ومستكشف payoff/scenario | مخطط |
 | **Portfolio Studio** | أشعة مخاطر، وقيود، ومحسن يراعي الدوران، وملاحظات إعادة توازن | مخطط |
 | **Alpha Zoo** | 452 ألفا كمّي جاهز عبر 4 zoos (Qlib 158 + Kakushadze 101 + GTJA 191 + FF5 + Carhart)، سطر أوامر واحد للـ bench، تكامل agent، وواجهة Web | **تم الإطلاق 0.1.8** |
-| **Research Delivery** | موجزات مجدولة إلى Slack / Telegram / قنوات شبيهة بالبريد | مخطط |
+| **Research Delivery** | موجزات مجدولة وجلسات بحث حي عبر Slack / Telegram / قنوات IM شبيهة بالبريد | المُجدوِل + IM Runtime شُحنا |
 | **Community** | مهارات وإعدادات مسبقة وبطاقات استراتيجية قابلة للمشاركة | قيد الاستكشاف |
 
 ---
