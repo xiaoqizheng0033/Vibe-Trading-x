@@ -28,8 +28,14 @@
 | 学习文档 | `docs/research/` | 本地研究笔记（**upstream .gitignore 忽略 docs/**，fork 若需版本管理见下方） |
 | 配置 | `agent/.env` | DeepSeek 等 LLM / 可选 Tushare（**仅本地，不提交**） |
 
-### 计划中的改动
+### 已在 GitHub fork 上的定制（origin/main 原有）
 
+- IM 多渠道（Telegram/飞书/微信等）、i18n（ja/ko/ar）、Trading212 connector、Reports 页等（见 `git log origin/main`）
+
+### 本次本地新增并 push
+
+- [x] 启动/诊断脚本：`start.bat`、`start-full.bat`、`scripts/*`
+- [x] 维护笔记：`LOCAL.md`
 - [ ] 功能定制：_（填写）_
 - [ ] 配置适配：_（填写）_
 - [ ] Bug 修复：_（填写）_
@@ -54,7 +60,8 @@
 
 | 日期 | upstream commit | 说明 | 验证 |
 |------|-----------------|------|------|
-| _YYYY-MM-DD_ | _hash_ | 首次 fork 初始化 | _待填_ |
+| 2026-06-30 | `dea17e0` | 首次 fork 初始化：配置 origin/upstream，合并 GitHub 已有定制 | 待跑 smoke |
+| 2026-06-30 | — | 本地 merge `origin/main`（含 IM channels、i18n、Trading212 等）+ 提交 start 脚本 | `96bdab1` |
 
 ### 上次 sync 后验证命令
 
